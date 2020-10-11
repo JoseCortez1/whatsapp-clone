@@ -1,5 +1,5 @@
 import React from 'react'
-import {Avatar,  IconButton } from '@material-ui/core';
+import {Avatar } from '@material-ui/core';
 import './SidebarChat.css'
 //https://youtu.be/gzdQDxzW2Tw?list=PLm0YJYRJ1JBKUQMjv1ESisikPLd2duU-y&t=4350
 function SidebarChat() {
