@@ -1,10 +1,29 @@
 import { IconButton, Avatar } from '@material-ui/core'
-import { AttachFile, InsertEmoticon, MoreVert, SearchOutlined, SettingsInputAntenna } from '@material-ui/icons'
+import { AttachFile, InsertEmoticon, MoreVert, SearchOutlined } from '@material-ui/icons'
 import MicIcon from '@material-ui/icons/Mic'
-import React from 'react'
+import React, { useState } from 'react'
 import "./Chat.css"
-function Chat() {
+import axios from './axios'
+function Chat({messages}) {
+    const [input, setInput] = useState("");
     
+    const sendMessage = async (e)=>{
+        e.preventDefault();
+        if(input.trim().length > 0){
+            await axios.post('/message/new',{
+                "name":"Demo app",
+                "message": input,
+                "timeStamp": new Date(),
+                "received": false
+            })
+            
+        }else{
+            console.log("empty message")
+        }
+        setInput("")
+        console.log( new Date())
+
+    }
    
     return (
         <div className="chat">
@@ -29,64 +48,29 @@ function Chat() {
             </div>
 
             <div className="chat__body">
-                <p className="chat__message">
-                    <span className="chat__name"> Sony</span>
-                    This is a message
-                    <span className="chat__timeStamp"> {
-                        new Date().toUTCString()
-                    }</span>
-                    
-                </p>
-                <p className="chat__message">
-                    <span className="chat__name"> Sony</span>
-                    This is a message
-                    <span className="chat__timeStamp"> {
-                        new Date().toUTCString()
-                    }</span>
-                    
-                </p>
-                <p className="chat__message chat__reciever">
-                    <span className="chat__name"> Sony</span>
-                    This is a message
-                    <span className="chat__timeStamp"> {
-                        new Date().toUTCString()
-                    }</span>
-                    
-                </p>
-              
-                <p className="chat__message chat__reciever">
-                    <span className="chat__name"> Sony</span>
-                    This is a message
-                    This is a message
-                    This is a message
-                    This is a message
-                    This is a message
-                    This is a message
-                    This is a message
-                    <span className="chat__timeStamp"> {
-                        new Date().toUTCString()
-                    }</span>
-                    
-                </p>
-                <p className="chat__message">
-                    <span className="chat__name"> Sony</span>
-                    This is a message
-                    <span className="chat__timeStamp"> {
-                        new Date().toUTCString()
-                    }</span>
-                    
-                </p>
+                {messages.map(message=>(
+                    <p key={message._id} className={`chat__message  ${message.received && "chat__reciever"}`}>
+                        <span className="chat__name"> {message.name}</span>
+                        {message.message}
+                        <span className="chat__timeStamp"> {
+                            message.timeStamp
+                        }</span>
+                        
+                    </p>
+
+                ))}
             </div>
 
             <div className="chat__footer">
                 <InsertEmoticon/>
                 <form>
                     <input 
-                        onChange={e=>SettingsInputAntenna(e.target.value)}
+                        value={input}
+                        onChange={e=> setInput(e.target.value)}
                         placeholder="Type a message"
                         type="text"    
                     />
-                    <button type="submit">
+                    <button onClick={sendMessage} type="submit">
                         Send a message
                     </button>
                 </form>
